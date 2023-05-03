@@ -1,0 +1,29 @@
+{
+  "name": "onboard-joao-bernardino",
+  "version": "1.0.0",
+  "description": "Taqtile onboard project",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "clean": "rm -rf dist",
+    "dev": "tsc && NODE_ENV=development node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indigotech/onboard-joao-bernardino.git"
+  },
+  "author": "João Bernardino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indigotech/onboard-joao-bernardino/issues"
+  },
+  "homepage": "https://github.com/indigotech/onboard-joao-bernardino#readme",
+  "dependencies": {
+    "@apollo/server": "4.7.1",
+    "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "18.16.3"
+  }
+}
