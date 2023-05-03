@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/indigotech/onboard-joao-bernardino#readme",
   "dependencies": {
-    "graphql": "16.6.0",
+    "@apollo/server": "4.7.1",
     "typescript": "5.0.4"
   },
   "devDependencies": {
