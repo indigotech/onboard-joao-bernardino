@@ -4,8 +4,8 @@
   "description": "Taqtile onboard project",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
-    "clean": "rm -rf dist/*",
+    "start": "mkdir dist ; tsc && node dist/index.js",
+    "clean": "rm -rf dist",
     "dev": "tsc && NODE_ENV=development node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
