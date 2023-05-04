@@ -11,7 +11,7 @@ services:
       - POSTGRES_DB=pick_a_db_name
 
   testdb:
-    image: postgres:15.1
+    image: postgres:15.2
     ports:
       - "5433:5432"
     volumes:
