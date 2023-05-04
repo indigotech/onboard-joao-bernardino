@@ -1,13 +1,13 @@
 const typeDefs = `#graphql
-    type Query {
-        hello: String
-    }
-`
+  type Query {
+    hello: String
+  }
+`;
 
 const resolvers = {
-    Query: {
-        hello: () => "wassup?",
-    },
-}
+  Query: {
+    hello: () => 'wassup?',
+  },
+};
 
-export { typeDefs, resolvers }
+export { typeDefs, resolvers };
