@@ -1,16 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  firstName!: string;
+  name!: string;
 
   @Column()
-  lastName!: string;
+  email!: string;
 
   @Column()
-  isActive!: boolean;
+  password!: string;
+
+  @Column()
+  birthDate!: string;
+
+  constructor(name: string, email: string, password: string, birthDate: string) {
+    super();
+    this.name = name;
+    this.email = email;
+    this.password = password;
+    this.birthDate = birthDate;
+  }
 }
