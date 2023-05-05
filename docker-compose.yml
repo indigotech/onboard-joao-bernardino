@@ -1,0 +1,22 @@
+services:
+  localdb:
+    image: postgres:14-alpine # you can pick the most recent version available
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/dumps:/app-db-dumps
+    environment:
+      - POSTGRES_USER=joao
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=onboard_db
+
+  testdb:
+    image: postgres:14-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db/dumps:/app-db-dumps
+    environment:
+      - POSTGRES_USER=joao
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=onboard_db_teste
