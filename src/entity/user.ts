@@ -17,6 +17,12 @@ export class User extends BaseEntity {
   @Column()
   birthDate!: string;
 
+  static isValidPassword(password: string) {
+    const digitRegex = /[0-9]/;
+    const letterRegex = /[a-z]/;
+    return password.length > 5 && digitRegex.test(password) && letterRegex.test(password);
+  }
+
   constructor(name: string, email: string, password: string, birthDate: string) {
     super();
     this.name = name;
