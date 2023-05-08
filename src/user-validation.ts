@@ -1,4 +1,6 @@
 import { User } from './entity/user';
+import { appDataSource } from './data-source';
+import { UserInput } from './schema';
 
 function validatePassword(password: string) {
   const digitRegex = /[0-9]/;
@@ -7,20 +9,20 @@ function validatePassword(password: string) {
 }
 
 async function validateEmail(email: string) {
-  const userRepository = User.getRepository();
+  const userRepository = appDataSource.getRepository(User);
   const isDuplicated = await userRepository.exist({ where: { email } });
   const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return !isDuplicated && emailRegex.test(email);
 }
 
-export async function validateUser(user: User) {
+export async function validateUser(userInput: UserInput) {
   let validated = true;
   let failureReason = '';
 
-  if (!validatePassword(user.password)) {
+  if (!validatePassword(userInput.password)) {
     validated = false;
     failureReason = 'Invalid Password';
-  } else if (!(await validateEmail(user.email))) {
+  } else if (!(await validateEmail(userInput.email))) {
     validated = false;
     failureReason = 'Invalid Email';
   }

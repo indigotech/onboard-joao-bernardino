@@ -1,7 +1,10 @@
 import { UserInput } from './schema';
 import { User } from './entity/user';
+import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';
 import { hashString } from './hash-string';
+
+const userRepository = appDataSource.getRepository(User);
 
 export const resolvers = {
   Query: {
@@ -9,15 +12,15 @@ export const resolvers = {
   },
   Mutation: {
     createUser: async (_: unknown, { data }: { data: UserInput }) => {
-      const newUser = Object.assign(new User(), data);
-
-      const validationResult = await validateUser(newUser);
+      const validationResult = await validateUser(data);
       if (!validationResult.validated) {
         throw new Error(validationResult.failureReason);
       }
-      newUser.password = await hashString(newUser.password);
 
-      await newUser.save();
+      const newUser = Object.assign(new User(), data);
+      newUser.password = await hashString(data.password);
+
+      await userRepository.save(newUser);
       return newUser;
     },
   },
