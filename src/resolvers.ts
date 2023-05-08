@@ -1,6 +1,7 @@
 import { UserInput } from './schema';
 import { User } from './entity/user';
 import { validateUser } from './user-validation';
+import { hashPassword } from './hash-password';
 
 export const resolvers = {
   Query: {
@@ -14,6 +15,7 @@ export const resolvers = {
       if (!validationResult.validated) {
         throw new Error(validationResult.failureReason);
       }
+      newUser.password = await hashPassword(newUser.password);
 
       await newUser.save();
       return newUser;
