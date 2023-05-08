@@ -7,7 +7,7 @@
     "start": "tsc && node dist/index.js",
     "clean": "rm -rf dist",
     "dev": "tsc && NODE_ENV=development node dist/index.js",
-    "test": "tsc && mocha dist/test"
+    "test": "tsc && mocha dist/test --exit"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "prettier": "2.8.8",
     "typescript": "5.0.4",
-    "mocha": "10.2.0"
+    "mocha": "10.2.0",
+    "axios": "1.4.0"
   }
 }

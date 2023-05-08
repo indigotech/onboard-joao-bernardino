@@ -1,10 +1,17 @@
 import { describe, it } from 'mocha';
-import assert from 'node:assert/strict';
+import { run } from '../src/server';
+import axios from 'axios';
 
-describe('Array', function () {
-  describe('#indexOf()', function () {
-    it('should return -1 when the value is not present', function () {
-      assert.equal([1, 2, 3].indexOf(4), -1);
+before(() => run());
+
+describe('Queries', () => {
+  it('should respond to a hello query', async () => {
+    const res = await axios.post('http://localhost:400/', {
+      query: 'query Query {\n  hello\n}',
+      variables: {},
+      operationName: 'Query',
     });
+
+    console.log(res.data);
   });
 });
