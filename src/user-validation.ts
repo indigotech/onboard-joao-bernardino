@@ -2,7 +2,7 @@ import { User } from './entity/user';
 
 function validatePassword(password: string) {
   const digitRegex = /[0-9]/;
-  const letterRegex = /[a-z]/;
+  const letterRegex = /[a-z|A-Z]/;
   return password.length > 5 && digitRegex.test(password) && letterRegex.test(password);
 }
 
