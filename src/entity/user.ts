@@ -22,4 +22,9 @@ export class User extends BaseEntity {
     const letterRegex = /[a-z]/;
     return password.length > 5 && digitRegex.test(password) && letterRegex.test(password);
   }
+
+  static async isValidEmail(email: string) {
+    const isDuplicated = await this.createQueryBuilder('user').where('user.email = :email', { email }).getExists();
+    return !isDuplicated;
+  }
 }
