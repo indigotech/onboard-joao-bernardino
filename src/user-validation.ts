@@ -9,7 +9,8 @@ function validatePassword(password: string) {
 async function validateEmail(email: string) {
   const userRepository = User.getRepository();
   const isDuplicated = await userRepository.exist({ where: { email } });
-  return !isDuplicated;
+  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  return !isDuplicated && emailRegex.test(email);
 }
 
 export async function validateUser(user: User) {
