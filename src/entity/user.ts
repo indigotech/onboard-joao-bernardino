@@ -22,12 +22,4 @@ export class User extends BaseEntity {
     const letterRegex = /[a-z]/;
     return password.length > 5 && digitRegex.test(password) && letterRegex.test(password);
   }
-
-  constructor(name: string, email: string, password: string, birthDate: string) {
-    super();
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.birthDate = birthDate;
-  }
 }

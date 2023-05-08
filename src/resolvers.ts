@@ -7,7 +7,11 @@ export const resolvers = {
   },
   Mutation: {
     createUser: async (_: unknown, { data }: { data: UserInput }) => {
-      const newUser = new User(data.name, data.email, data.password, data.birthDate);
+      const newUser = new User();
+      newUser.name = data.name;
+      newUser.email = data.email;
+      newUser.password = data.password;
+      newUser.birthDate = data.birthDate;
       await newUser.save();
       return newUser;
     },
