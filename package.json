@@ -21,11 +21,13 @@
   "homepage": "https://github.com/indigotech/onboard-joao-bernardino#readme",
   "dependencies": {
     "@apollo/server": "4.7.1",
+    "bcrypt": "5.1.0",
     "pg": "8.10.0",
     "reflect-metadata": "0.1.13",
     "typeorm": "0.3.15"
   },
   "devDependencies": {
+    "@types/bcrypt": "5.0.0",
     "@types/node": "18.16.3",
     "@typescript-eslint/eslint-plugin": "5.59.2",
     "@typescript-eslint/parser": "5.59.2",
