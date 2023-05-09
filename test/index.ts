@@ -1,13 +1,16 @@
 import { describe, it, beforeEach } from 'mocha';
 import { run } from '../src/server';
-import { expect } from 'chai';
 import { setupEnv } from '../src/environment';
+import { use as chaiUse, expect } from 'chai';
+import chaiExclude from 'chai-exclude';
 import axios from 'axios';
 import { appDataSource } from '../src/data-source';
 import { User } from '../src/entity/user';
 import { compare } from 'bcrypt';
 
-var serverUrl: string;
+let serverUrl: string;
+
+chaiUse(chaiExclude);
 
 before(async () => {
   setupEnv();
@@ -53,16 +56,12 @@ describe('Mutation', () => {
         operationName: 'CreateUser',
       });
 
-      const numberOfNewRows = await userRepository.count({ where: {} });
+      const responseData = res.data.data.createUser;
       const storedUserData = await userRepository.findOne({ where: {} });
 
-      // console.log's are placeholders, will replace with expect's
-      console.log(res.data);
-      console.log(numberOfNewRows);
-      console.log(storedUserData);
-      if (storedUserData) {
-        console.log(await compare(userInput.password, storedUserData.password));
-      }
+      expect(responseData).excluding(['id', 'password']).to.deep.equal(userInput);
+      expect(storedUserData).excluding(['id', 'password']).to.deep.equal(userInput);
+      expect(await compare(userInput.password, storedUserData!.password)).to.be.true;
     });
   });
 });
