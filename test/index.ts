@@ -7,7 +7,7 @@ before(() => run());
 describe('Queries', () => {
   it('should respond to a hello query', async () => {
     const res = await axios.post('http://localhost:400/', {
-      query: 'query Query {\n  hello\n}',
+      query: 'query Query { hello }',
       variables: {},
       operationName: 'Query',
     });
