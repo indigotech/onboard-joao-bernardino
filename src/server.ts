@@ -4,14 +4,21 @@ import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
 import { appDataSource } from './data-source';
 
-export async function run() {
+export async function initDatabase() {
+  await appDataSource.setOptions({ url: process.env.DB_URL }).initialize();
+}
+
+export async function initServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
   });
-  const options = { listen: { port: 400 } };
 
-  await appDataSource.initialize();
-  const { url } = await startStandaloneServer(server, options);
+  const { url } = await startStandaloneServer(server, { listen: { port: 400 } });
   console.log(`🚀  Server ready at: ${url}`);
+}
+
+export async function run() {
+  await initDatabase();
+  await initServer();
 }

@@ -4,7 +4,7 @@
   "description": "Taqtile onboard project",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "start": "tsc && node dist/src/index.js",
     "clean": "rm -rf dist",
     "dev": "tsc && NODE_ENV=development node dist/index.js",
     "test": "mocha"

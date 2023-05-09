@@ -7,7 +7,7 @@ services:
       - ./db/dumps:/app-db-dumps
     environment:
       - POSTGRES_USER=joao
-      - POSTGRES_PASSWORD=1234
+      - POSTGRES_PASSWORD=senha
       - POSTGRES_DB=onboard_db
 
   testdb:
@@ -18,5 +18,5 @@ services:
       - ./db/dumps:/app-db-dumps
     environment:
       - POSTGRES_USER=joao
-      - POSTGRES_PASSWORD=1234
+      - POSTGRES_PASSWORD=senha
       - POSTGRES_DB=onboard_db_teste
