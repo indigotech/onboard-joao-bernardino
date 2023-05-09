@@ -1,5 +1,6 @@
 import { UserInput } from './schema';
 import { User } from './entity/user';
+import { validateUser } from './user-validation';
 
 export const resolvers = {
   Query: {
@@ -7,7 +8,13 @@ export const resolvers = {
   },
   Mutation: {
     createUser: async (_: unknown, { data }: { data: UserInput }) => {
-      const newUser = new User(data.name, data.email, data.password, data.birthDate);
+      const newUser = Object.assign(new User(), data);
+
+      const validationResult = await validateUser(newUser);
+      if (!validationResult.validated) {
+        throw new Error(validationResult.failureReason);
+      }
+
       await newUser.save();
       return newUser;
     },
