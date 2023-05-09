@@ -7,7 +7,7 @@
     "start": "tsc && node dist/src/index.js",
     "clean": "rm -rf dist",
     "dev": "tsc && NODE_ENV=development node dist/index.js",
-    "test": "mocha"
+    "test": "NODE_ENV=test mocha"
   },
   "repository": {
     "type": "git",
