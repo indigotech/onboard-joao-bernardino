@@ -14,7 +14,7 @@ export async function initServer() {
     resolvers,
   });
 
-  const { url } = await startStandaloneServer(server, { listen: { port: 400 } });
+  const { url } = await startStandaloneServer(server, { listen: { port: +process.env.PORT! } });
   console.log(`🚀  Server ready at: ${url}`);
 }
 

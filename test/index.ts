@@ -11,7 +11,7 @@ before(async () => {
 
 describe('Queries', () => {
   it('should respond to a hello query', async () => {
-    const res = await axios.post('http://localhost:400/', {
+    const res = await axios.post(`http://localhost:${process.env.PORT}/`, {
       query: 'query Query { hello }',
       variables: {},
       operationName: 'Query',
