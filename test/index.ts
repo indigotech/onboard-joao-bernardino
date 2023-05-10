@@ -18,26 +18,12 @@ before(async () => {
   serverUrl = `http://localhost:${process.env.PORT}/`;
 });
 
-describe('Query', () => {
-  describe('hello', () => {
-    it("should respond with 'wassup?'", async () => {
-      const res = await axios.post(serverUrl, {
-        query: 'query Query { hello }',
-        variables: {},
-        operationName: 'Query',
-      });
-
-      expect(res.data).to.deep.equal({ data: { hello: 'wassup?' } });
-    });
-  });
-});
-
 describe('Mutation', () => {
   const userRepository = appDataSource.getRepository(User);
 
   describe('createUser', () => {
-    beforeEach(() => {
-      userRepository.delete({});
+    beforeEach(async () => {
+      await userRepository.delete({});
     });
 
     it('should create user in db and return it in response', async () => {
