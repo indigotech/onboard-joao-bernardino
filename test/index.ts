@@ -20,7 +20,7 @@ before(async () => {
 
 describe('Query', () => {
   describe('hello', () => {
-    it('should respond to a hello query', async () => {
+    it("should respond with 'wassup?'", async () => {
       const res = await axios.post(serverUrl, {
         query: 'query Query { hello }',
         variables: {},
@@ -61,6 +61,8 @@ describe('Mutation', () => {
 
       expect(responseData).excluding(['id', 'password']).to.deep.equal(userInput);
       expect(storedUserData).excluding(['id', 'password']).to.deep.equal(userInput);
+
+      expect(+responseData.id).to.equal(storedUserData!.id); // responseData.id is a string
       expect(await compare(userInput.password, storedUserData!.password)).to.be.true;
     });
   });
