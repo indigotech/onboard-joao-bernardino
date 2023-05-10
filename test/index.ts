@@ -1,13 +1,17 @@
 import { describe, it } from 'mocha';
 import { run } from '../src/server';
 import { expect } from 'chai';
+import { setupEnv } from '../src/environment';
 import axios from 'axios';
 
-before(() => run());
+before(async () => {
+  setupEnv();
+  await run();
+});
 
 describe('Queries', () => {
   it('should respond to a hello query', async () => {
-    const res = await axios.post('http://localhost:400/', {
+    const res = await axios.post(`http://localhost:${process.env.PORT}/`, {
       query: 'query Query { hello }',
       variables: {},
       operationName: 'Query',

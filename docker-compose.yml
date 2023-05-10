@@ -6,9 +6,9 @@ services:
     volumes:
       - ./db/dumps:/app-db-dumps
     environment:
-      - POSTGRES_USER=joao
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=onboard_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=senha
+      - POSTGRES_DB=db
 
   testdb:
     image: postgres:14-alpine
@@ -17,6 +17,6 @@ services:
     volumes:
       - ./db/dumps:/app-db-dumps
     environment:
-      - POSTGRES_USER=joao
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=onboard_db_teste
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=senha_teste
+      - POSTGRES_DB=db_test
