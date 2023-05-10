@@ -1,5 +1,9 @@
 import * as dotenv from 'dotenv';
 
 export function setupEnv() {
-  dotenv.config({ path: `${process.env.NODE_ENV || ''}.env` });
+  if (process.env.APP_ENV == 'test') {
+    dotenv.config({ path: `test.env` });
+  } else {
+    dotenv.config();
+  }
 }
