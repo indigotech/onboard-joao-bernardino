@@ -1,5 +1,6 @@
 import { describe, it } from 'mocha';
 import { run } from '../src/server';
+import { expect } from 'chai';
 import axios from 'axios';
 
 before(() => run());
@@ -12,6 +13,6 @@ describe('Queries', () => {
       operationName: 'Query',
     });
 
-    console.log(res.data);
+    expect(res.data).to.deep.equal({ data: { hello: 'wassup?' } });
   });
 });
