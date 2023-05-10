@@ -3,6 +3,7 @@ import { User } from './entity/user';
 import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';
 import { hashString } from './hash-string';
+import { BaseError } from './base-error';
 
 const userRepository = appDataSource.getRepository(User);
 
@@ -14,7 +15,7 @@ export const resolvers = {
     createUser: async (_: unknown, { data }: { data: UserInput }) => {
       const validationResult = await validateUser(data);
       if (!validationResult.validated) {
-        throw new Error(validationResult.failureReason);
+        throw new BaseError(validationResult.message, 400, validationResult.failureReason);
       }
 
       const newUser = Object.assign(new User(), data);
