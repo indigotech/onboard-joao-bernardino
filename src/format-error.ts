@@ -2,12 +2,19 @@ import { unwrapResolverError } from '@apollo/server/errors';
 import { GraphQLFormattedError } from 'graphql';
 import { BaseError } from './base-error';
 
-export function formatError(formattedError: GraphQLFormattedError, error: unknown) {
+function wrapError(error: BaseError) {
+  return {
+    ...error,
+    stacktrace: process.env.SHOW_STACK_IN_ERRORS == 'yes' ? error.stack : '',
+  };
+}
+
+export function formatError(_: GraphQLFormattedError, error: unknown) {
   const unwrappedError = unwrapResolverError(error);
 
   if (unwrappedError instanceof BaseError) {
-    return { ...unwrappedError, stackframe: process.env.SHOW_STACK_IN_ERRORS == 'yes' ? unwrappedError.stack : '' };
+    return wrapError(unwrappedError);
   }
 
-  return new BaseError('Unknown error', 500, '');
+  return wrapError(new BaseError('Unknown error', 500, ''));
 }

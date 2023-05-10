@@ -7,6 +7,7 @@ import axios from 'axios';
 import { appDataSource } from '../src/data-source';
 import { User } from '../src/entity/user';
 import { compare } from 'bcrypt';
+import { UserInput } from './schema';
 
 let serverUrl: string;
 
@@ -22,27 +23,41 @@ describe('Mutation', () => {
   const userRepository = appDataSource.getRepository(User);
 
   describe('createUser', () => {
+    let userInput: UserInput;
+    const defaultUserInput = {
+      birthDate: '2003-19-01',
+      email: 'john.smith@email.com',
+      name: 'John Smith',
+      password: 'password123',
+    };
+
     beforeEach(async () => {
+      userInput = defaultUserInput;
       await userRepository.delete({});
     });
 
-    it('should create user in db and return it in response', async () => {
-      const userInput = {
-        birthDate: '2003-19-01',
-        email: 'joao.bernardino@taqtile.com',
-        name: 'João Bernardino',
-        password: 'senha123',
-      };
+    async function requestUserCreation(input: UserInput) {
+      const mutation = `#graphql
+        mutation CreateUser($data: UserInput) {
+           createUser(data: $data) { 
+            id 
+            name 
+            birthDate 
+            email 
+        }}
+      `;
 
-      const res = await axios.post(serverUrl, {
-        query: 'mutation CreateUser($data: UserInput) { createUser(data: $data) { id name birthDate email }}',
+      return await axios.post(serverUrl, {
+        query: mutation,
         variables: {
-          data: userInput,
+          data: input,
         },
         operationName: 'CreateUser',
       });
+    }
 
-      const responseData = res.data.data.createUser;
+    it('should create user in db and return it in response', async () => {
+      const responseData = (await requestUserCreation(userInput)).data.data.createUser;
       const storedUserData = await userRepository.findOne({ where: {} });
 
       expect(responseData).excluding(['id', 'password']).to.deep.equal(userInput);
@@ -50,6 +65,32 @@ describe('Mutation', () => {
 
       expect(+responseData.id).to.equal(storedUserData!.id); // responseData.id is a string
       expect(await compare(userInput.password, storedUserData!.password)).to.be.true;
+    });
+
+    it('should respond with an error in case of invalid passwords', async () => {
+      userInput.password = 'short';
+      let responseData = (await requestUserCreation(userInput)).data.errors[0];
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid password',
+        code: 400,
+        details: 'password should have at least 6 characters',
+      });
+
+      userInput.password = 'abcdefghijklmnop';
+      responseData = (await requestUserCreation(userInput)).data.errors[0];
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid password',
+        code: 400,
+        details: 'password should contain a digit',
+      });
+
+      userInput.password = '123456789';
+      responseData = (await requestUserCreation(userInput)).data.errors[0];
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid password',
+        code: 400,
+        details: 'password should contain a letter',
+      });
     });
   });
 });
