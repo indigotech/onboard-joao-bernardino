@@ -1,4 +1,4 @@
-import { UserInput } from './schema';
+import { LoginInput, UserInput } from './schema';
 import { User } from './entity/user';
 import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';
@@ -23,6 +23,18 @@ export const resolvers = {
 
       await userRepository.save(newUser);
       return newUser;
+    },
+
+    login: (_: unknown, { credentials }: { credentials: LoginInput }) => {
+      return {
+        user: {
+          id: 12,
+          name: 'User Name',
+          email: 'User e-mail',
+          birthDate: '04-25-1990',
+        },
+        token: 'the_token',
+      };
     },
   },
 };

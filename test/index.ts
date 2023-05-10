@@ -7,7 +7,7 @@ import axios from 'axios';
 import { appDataSource } from '../src/data-source';
 import { User } from '../src/entity/user';
 import { compare } from 'bcrypt';
-import { UserInput } from './schema';
+import { LoginInput, UserInput } from './schema';
 
 let serverUrl: string;
 
@@ -132,6 +132,54 @@ describe('Mutation', () => {
         details: 'an user with that email already exists',
       });
       expect(await getNumberOfUsersInDB()).to.equal(1);
+    });
+  });
+
+  describe('login', () => {
+    const defaultLoginInput = {
+      email: 'john.smith@email.com',
+      password: 'abcd1234',
+    };
+
+    async function requestLogin(input: LoginInput) {
+      const mutation = `#graphql 
+        mutation Login($credentials: LoginInput) {
+          login(credentials: $credentials) {
+            user {
+              id
+              name
+              birthDate
+              email
+            }
+            token
+          }
+        }
+      `;
+
+      return await axios.post(serverUrl, {
+        query: mutation,
+        variables: {
+          credentials: input,
+        },
+        operationName: 'Login',
+      });
+    }
+
+    it('should respond correctly to a login request', async () => {
+      const res = (await requestLogin(defaultLoginInput)).data;
+      expect(res).to.deep.equal({
+        data: {
+          login: {
+            user: {
+              id: '12',
+              name: 'User Name',
+              email: 'User e-mail',
+              birthDate: '04-25-1990',
+            },
+            token: 'the_token',
+          },
+        },
+      });
     });
   });
 });

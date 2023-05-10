@@ -6,11 +6,21 @@ export const typeDefs = `#graphql
     birthDate: String!
   }
 
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
   type User {
     id: ID!
     name: String!
     email: String!
     birthDate: String!
+  }
+
+  type LoginInfo {
+    user: User!
+    token: String!
   }
 
   type Query {
@@ -19,6 +29,7 @@ export const typeDefs = `#graphql
 
   type Mutation {
     createUser(data: UserInput): User
+    login(credentials: LoginInput): LoginInfo
   }
 `;
 
@@ -27,4 +38,9 @@ export interface UserInput {
   email: string;
   password: string;
   birthDate: string;
+}
+
+export interface LoginInput {
+  email: string;
+  password: string;
 }
