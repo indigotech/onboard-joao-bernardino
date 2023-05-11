@@ -1,6 +1,7 @@
 import { User } from './entity/user';
 import { appDataSource } from './data-source';
 import { UserInput } from './schema';
+import { BaseError } from './base-error';
 
 function validatePassword(password: string) {
   const digitRegex = /[0-9]/;
@@ -14,9 +15,9 @@ function validatePassword(password: string) {
 
   const validationResult = validations.find((value) => value.validated == false);
   if (validationResult) {
-    return { message: 'invalid password', ...validationResult };
+    return { validated: false, error: new BaseError('invalid password', 400, validationResult.failureReason) };
   } else {
-    return { validated: true, message: '', failureReason: '' };
+    return { validated: true };
   }
 }
 
@@ -28,17 +29,15 @@ async function validateEmail(email: string) {
   if (isDuplicated) {
     return {
       validated: false,
-      message: 'invalid email',
-      failureReason: 'an user with that email already exists',
+      error: new BaseError('invalid email', 400, 'an user with that email already exists'),
     };
   } else if (!emailRegex.test(email)) {
     return {
       validated: false,
-      message: 'invalid email',
-      failureReason: 'email has invalid format',
+      error: new BaseError('invalid email', 400, 'email has invalid format'),
     };
   } else {
-    return { validated: true, message: '', failureReason: '' };
+    return { validated: true };
   }
 }
 

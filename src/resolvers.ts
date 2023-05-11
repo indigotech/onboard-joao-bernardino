@@ -15,7 +15,7 @@ export const resolvers = {
     createUser: async (_: unknown, { data }: { data: UserInput }) => {
       const validationResult = await validateUser(data);
       if (!validationResult.validated) {
-        throw new BaseError(validationResult.message, 400, validationResult.failureReason);
+        throw validationResult.error;
       }
 
       const newUser = Object.assign(new User(), data);
