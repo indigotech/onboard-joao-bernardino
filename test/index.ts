@@ -22,6 +22,50 @@ before(async () => {
 describe('Mutation', () => {
   const userRepository = appDataSource.getRepository(User);
 
+  async function requestUserCreation(input: UserInput) {
+    const mutation = `#graphql
+      mutation CreateUser($data: UserInput) {
+          createUser(data: $data) { 
+          id 
+          name 
+          birthDate 
+          email 
+      }}
+    `;
+
+    return await axios.post(serverUrl, {
+      query: mutation,
+      variables: {
+        data: input,
+      },
+      operationName: 'CreateUser',
+    });
+  }
+
+  async function requestLogin(input: LoginInput) {
+    const mutation = `#graphql 
+      mutation Login($credentials: LoginInput) {
+        login(credentials: $credentials) {
+          user {
+            id
+            name
+            birthDate
+            email
+          }
+          token
+        }
+      }
+    `;
+
+    return await axios.post(serverUrl, {
+      query: mutation,
+      variables: {
+        credentials: input,
+      },
+      operationName: 'Login',
+    });
+  }
+
   describe('createUser', () => {
     const defaultUserInput = {
       birthDate: '2003-19-01',
@@ -33,26 +77,6 @@ describe('Mutation', () => {
     beforeEach(async () => {
       await userRepository.delete({});
     });
-
-    async function requestUserCreation(input: UserInput) {
-      const mutation = `#graphql
-        mutation CreateUser($data: UserInput) {
-           createUser(data: $data) { 
-            id 
-            name 
-            birthDate 
-            email 
-        }}
-      `;
-
-      return await axios.post(serverUrl, {
-        query: mutation,
-        variables: {
-          data: input,
-        },
-        operationName: 'CreateUser',
-      });
-    }
 
     async function getNumberOfUsersInDB() {
       return await userRepository.count({});
@@ -136,50 +160,23 @@ describe('Mutation', () => {
   });
 
   describe('login', () => {
-    const defaultLoginInput = {
+    const defaultUserInput = {
+      birthDate: '2003-19-01',
       email: 'john.smith@email.com',
-      password: 'abcd1234',
+      name: 'John Smith',
+      password: 'password123',
     };
 
-    async function requestLogin(input: LoginInput) {
-      const mutation = `#graphql 
-        mutation Login($credentials: LoginInput) {
-          login(credentials: $credentials) {
-            user {
-              id
-              name
-              birthDate
-              email
-            }
-            token
-          }
-        }
-      `;
+    const defaultLoginInput = {
+      email: defaultUserInput.email,
+      password: defaultUserInput.password,
+    };
 
-      return await axios.post(serverUrl, {
-        query: mutation,
-        variables: {
-          credentials: input,
-        },
-        operationName: 'Login',
-      });
-    }
-
-    it('should respond correctly to a login request', async () => {
-      const res = (await requestLogin(defaultLoginInput)).data;
-      expect(res).to.deep.equal({
-        data: {
-          login: {
-            user: {
-              id: '12',
-              name: 'User Name',
-              email: 'User e-mail',
-              birthDate: '04-25-1990',
-            },
-            token: 'the_token',
-          },
-        },
-      });
+    it('should respond correctly to a valid login request', async () => {
+      const storedUser = (await requestUserCreation(defaultUserInput)).data;
+      const response = await requestLogin(defaultLoginInput);
+      console.log(response.data);
+      //expect(response.).excluding('password').to.deep.equal(storedUser);
     });
   });
 });

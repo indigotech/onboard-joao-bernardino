@@ -4,6 +4,7 @@ import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';
 import { hashString } from './hash-string';
 import { BaseError } from './base-error';
+import { generateToken, getUserFromLoginInput } from './login';
 
 const userRepository = appDataSource.getRepository(User);
 
@@ -25,16 +26,10 @@ export const resolvers = {
       return newUser;
     },
 
-    login: (_: unknown, { credentials }: { credentials: LoginInput }) => {
-      return {
-        user: {
-          id: 12,
-          name: 'User Name',
-          email: 'User e-mail',
-          birthDate: '04-25-1990',
-        },
-        token: 'the_token',
-      };
+    login: async (_: unknown, { credentials }: { credentials: LoginInput }) => {
+      const user = await getUserFromLoginInput(credentials);
+      const token = generateToken();
+      return { user, token };
     },
   },
 };
