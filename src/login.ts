@@ -3,6 +3,7 @@ import { appDataSource } from './data-source';
 import { User } from './entity/user';
 import { LoginInput } from './inputs';
 import { BaseError } from './base-error';
+import { generateToken } from './token';
 
 async function getUserFromLoginInput(credentials: LoginInput) {
   const userRepository = appDataSource.getRepository(User);
@@ -15,12 +16,8 @@ async function getUserFromLoginInput(credentials: LoginInput) {
   }
 }
 
-async function generateToken() {
-  return '';
-}
-
 export async function getUserAndToken(credentials: LoginInput) {
   const user = await getUserFromLoginInput(credentials);
-  const token = await generateToken();
+  const token = await generateToken(user.id);
   return { user, token };
 }
