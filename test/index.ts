@@ -58,7 +58,7 @@ describe('Mutation', () => {
       return await userRepository.count({});
     }
 
-    function makeInput(fields?: object) {
+    function makeInput(fields?: Partial<UserInput>) {
       return { ...defaultUserInput, ...fields };
     }
 
