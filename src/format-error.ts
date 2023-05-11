@@ -9,7 +9,7 @@ function wrapError(error: BaseError) {
   };
 }
 
-export function formatError(_: GraphQLFormattedError, error: unknown) {
+export function formatError(e: GraphQLFormattedError, error: unknown) {
   const unwrappedError = unwrapResolverError(error);
 
   if (unwrappedError instanceof BaseError) {

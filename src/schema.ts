@@ -9,6 +9,7 @@ export const typeDefs = `#graphql
   input LoginInput {
     email: String!
     password: String!
+    rememberMe: Boolean
   }
 
   type User {
