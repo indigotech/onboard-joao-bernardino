@@ -74,27 +74,31 @@ describe('Mutation', () => {
       expect(await compare(userInput.password, storedUserData!.password)).to.be.true;
     });
 
-    it('should respond with an error in case of invalid passwords', async () => {
-      let userInput = makeInput({ password: 'short' });
-      let responseData = (await requestUserCreation(userInput)).data.errors[0];
+    it('should give an error in case of short passwords', async () => {
+      const userInput = makeInput({ password: 'short' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
       expect(responseData).excluding('stacktrace').to.deep.equal({
         message: 'invalid password',
         code: 400,
         details: 'password should have at least 6 characters',
       });
       expect(await getNumberOfUsersInDB()).to.equal(0);
+    });
 
-      userInput = makeInput({ password: 'abcdefghijklmnop' });
-      responseData = (await requestUserCreation(userInput)).data.errors[0];
+    it('should give an error in case of passwords with no digits', async () => {
+      const userInput = makeInput({ password: 'abcdefghijklmnop' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
       expect(responseData).excluding('stacktrace').to.deep.equal({
         message: 'invalid password',
         code: 400,
         details: 'password should contain a digit',
       });
       expect(await getNumberOfUsersInDB()).to.equal(0);
+    });
 
-      userInput = makeInput({ password: '123456789' });
-      responseData = (await requestUserCreation(userInput)).data.errors[0];
+    it('should give an error in case of passwords with no letters', async () => {
+      const userInput = makeInput({ password: '123456789' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
       expect(responseData).excluding('stacktrace').to.deep.equal({
         message: 'invalid password',
         code: 400,
@@ -103,24 +107,24 @@ describe('Mutation', () => {
       expect(await getNumberOfUsersInDB()).to.equal(0);
     });
 
-    it('should respond with an error in case of invalid emails', async () => {
-      // email with bad format
-      let userInput = makeInput({ email: 'bademail.com' });
-      let responseData = (await requestUserCreation(userInput)).data.errors[0];
+    it('should give an error in case of emails with incorrect formats', async () => {
+      const userInput = makeInput({ email: 'bademail.com' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
       expect(responseData).excluding('stacktrace').to.deep.equal({
         message: 'invalid email',
         code: 400,
         details: 'email has invalid format',
       });
       expect(await getNumberOfUsersInDB()).to.equal(0);
+    });
 
-      // email already in use
+    it('should give an error in case of duplicated emails', async () => {
       const existingUser = new User();
       Object.assign(existingUser, defaultUserInput);
       userRepository.save(existingUser);
 
-      userInput = makeInput({ email: existingUser.email });
-      responseData = (await requestUserCreation(userInput)).data.errors[0];
+      const userInput = makeInput({ email: existingUser.email });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
 
       expect(responseData).excluding('stacktrace').to.deep.equal({
         message: 'invalid email',
