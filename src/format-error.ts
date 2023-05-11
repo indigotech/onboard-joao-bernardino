@@ -5,7 +5,7 @@ import { BaseError } from './base-error';
 function wrapError(error: BaseError) {
   return {
     ...error,
-    stacktrace: process.env.SHOW_STACK_IN_ERRORS == 'yes' ? error.stack : '',
+    stacktrace: process.env.SHOW_STACK_IN_ERRORS == 'yes' ? error.stack : undefined,
   };
 }
 

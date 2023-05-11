@@ -13,7 +13,7 @@ export async function initServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    formatError: formatError,
+    formatError,
   });
 
   const { url } = await startStandaloneServer(server, { listen: { port: +process.env.PORT! } });
