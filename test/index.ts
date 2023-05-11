@@ -9,6 +9,8 @@ import { User } from '../src/entity/user';
 import { compare } from 'bcrypt';
 import { LoginInput, UserInput } from '../src/inputs';
 import { hashString } from '../src/hash-string';
+import * as jwt from 'jsonwebtoken';
+import { stringify } from 'querystring';
 
 let serverUrl: string;
 
@@ -191,6 +193,27 @@ describe('Mutation', () => {
         birthDate: newUser.birthDate,
       });
       expect(loginInfo).to.haveOwnProperty('token');
+
+      const jwtPayload = jwt.verify(loginInfo.token, process.env.JWT_PRIVATE_KEY!) as jwt.JwtPayload;
+      expect(jwtPayload).keys(['id', 'exp', 'iat']);
+      expect(jwtPayload.id).to.equal(newUser.id);
+      expect((jwtPayload.exp! - jwtPayload.iat!) / 3600).to.equal(+process.env.JWT_EXPIRATION_HOURS!);
+    });
+
+    it('should extend token lifetime if remeberMe is true', async () => {
+      const newUser = await insertUserInDB(defaultLoginInput);
+
+      const response = (await requestLogin({ ...defaultLoginInput, rememberMe: true })).data;
+      const loginInfo = response.data.login;
+
+      expect(loginInfo.user).excluding(['password', 'id']).to.deep.equal(newUser);
+      expect(+loginInfo.user.id).to.deep.equal(newUser.id);
+      expect(loginInfo).to.haveOwnProperty('token');
+
+      const jwtPayload = jwt.verify(loginInfo.token, process.env.JWT_PRIVATE_KEY!) as jwt.JwtPayload;
+      expect(jwtPayload).keys(['id', 'exp', 'iat']);
+      expect(jwtPayload.id).to.equal(newUser.id);
+      expect((jwtPayload.exp! - jwtPayload.iat!) / 3600).to.equal(+process.env.JWT_EXTENDED_EXPIRATION_HOURS!);
     });
 
     it('should fail if no user has the given email', async () => {
