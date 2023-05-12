@@ -184,8 +184,12 @@ describe('Mutation', () => {
       const response = (await requestLogin(defaultLoginInput)).data;
       const loginInfo = response.data.login;
 
-      expect(loginInfo.user).excluding(['password', 'id']).to.deep.equal(newUser);
-      expect(+loginInfo.user.id).to.deep.equal(newUser.id);
+      expect(loginInfo.user).to.deep.equal({
+        id: newUser.id.toString(),
+        name: newUser.name,
+        email: newUser.email,
+        birthDate: newUser.birthDate,
+      });
       expect(loginInfo).to.haveOwnProperty('token');
     });
 
