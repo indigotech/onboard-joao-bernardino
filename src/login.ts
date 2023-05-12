@@ -18,6 +18,6 @@ async function getUserFromLoginInput(credentials: LoginInput) {
 
 export async function getUserAndToken(credentials: LoginInput) {
   const user = await getUserFromLoginInput(credentials);
-  const token = await generateToken(user.id, credentials.rememberMe);
+  const token = generateToken(user.id, credentials.rememberMe);
   return { user, token };
 }

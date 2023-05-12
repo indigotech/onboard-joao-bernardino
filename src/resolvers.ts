@@ -4,6 +4,9 @@ import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';
 import { hashString } from './hash-string';
 import { getUserAndToken } from './login';
+import { AppContext } from './context';
+import { authenticate } from './token';
+import { BaseError } from './base-error';
 
 const userRepository = appDataSource.getRepository(User);
 
@@ -12,7 +15,13 @@ export const resolvers = {
     hello: () => 'wassup?',
   },
   Mutation: {
-    createUser: async (_: unknown, { data }: { data: UserInput }) => {
+    createUser: async (_: unknown, { data }: { data: UserInput }, contextValue: AppContext) => {
+      if (contextValue.token) {
+        authenticate(contextValue.token);
+      } else {
+        throw new BaseError('Authentication failed', 401, 'no token provided');
+      }
+
       const validationResult = await validateUser(data);
       if (!validationResult.validated) {
         throw validationResult.error;
