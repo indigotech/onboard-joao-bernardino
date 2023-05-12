@@ -1,7 +1,7 @@
 import { compare } from 'bcrypt';
 import { appDataSource } from './data-source';
 import { User } from './entity/user';
-import { LoginInput } from './schema';
+import { LoginInput } from './inputs';
 import { BaseError } from './base-error';
 
 export async function getUserFromLoginInput(credentials: LoginInput) {

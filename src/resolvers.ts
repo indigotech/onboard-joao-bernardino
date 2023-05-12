@@ -1,4 +1,4 @@
-import { LoginInput, UserInput } from './schema';
+import { LoginInput, UserInput } from './inputs';
 import { User } from './entity/user';
 import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';

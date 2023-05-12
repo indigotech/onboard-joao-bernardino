@@ -7,7 +7,7 @@ import axios from 'axios';
 import { appDataSource } from '../src/data-source';
 import { User } from '../src/entity/user';
 import { compare } from 'bcrypt';
-import { LoginInput, UserInput } from '../src/schema';
+import { LoginInput, UserInput } from '../src/inputs';
 import { hashString } from '../src/hash-string';
 
 let serverUrl: string;
