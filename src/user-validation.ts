@@ -1,30 +1,50 @@
 import { User } from './entity/user';
 import { appDataSource } from './data-source';
 import { UserInput } from './schema';
+import { BaseError } from './base-error';
 
 function validatePassword(password: string) {
   const digitRegex = /[0-9]/;
   const letterRegex = /[a-z|A-Z]/;
-  return password.length > 5 && digitRegex.test(password) && letterRegex.test(password);
+
+  const validations = [
+    { validated: password.length > 5, failureReason: 'password should have at least 6 characters' },
+    { validated: digitRegex.test(password), failureReason: 'password should contain a digit' },
+    { validated: letterRegex.test(password), failureReason: 'password should contain a letter' },
+  ];
+
+  const validationResult = validations.find((value) => value.validated == false);
+  if (validationResult) {
+    return { validated: false, error: new BaseError('invalid password', 400, validationResult.failureReason) };
+  } else {
+    return { validated: true };
+  }
 }
 
 async function validateEmail(email: string) {
   const userRepository = appDataSource.getRepository(User);
   const isDuplicated = await userRepository.exist({ where: { email } });
   const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  return !isDuplicated && emailRegex.test(email);
+
+  if (isDuplicated) {
+    return {
+      validated: false,
+      error: new BaseError('invalid email', 400, 'an user with that email already exists'),
+    };
+  } else if (!emailRegex.test(email)) {
+    return {
+      validated: false,
+      error: new BaseError('invalid email', 400, 'email has invalid format'),
+    };
+  } else {
+    return { validated: true };
+  }
 }
 
 export async function validateUser(userInput: UserInput) {
-  let validated = true;
-  let failureReason = '';
-
-  if (!validatePassword(userInput.password)) {
-    validated = false;
-    failureReason = 'Invalid Password';
-  } else if (!(await validateEmail(userInput.email))) {
-    validated = false;
-    failureReason = 'Invalid Email';
+  let validationResult = validatePassword(userInput.password);
+  if (validationResult.validated) {
+    validationResult = await validateEmail(userInput.email);
   }
-  return { validated, failureReason };
+  return validationResult;
 }

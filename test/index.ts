@@ -7,6 +7,7 @@ import axios from 'axios';
 import { appDataSource } from '../src/data-source';
 import { User } from '../src/entity/user';
 import { compare } from 'bcrypt';
+import { UserInput } from './schema';
 
 let serverUrl: string;
 
@@ -22,27 +23,48 @@ describe('Mutation', () => {
   const userRepository = appDataSource.getRepository(User);
 
   describe('createUser', () => {
+    const defaultUserInput = {
+      birthDate: '2003-19-01',
+      email: 'john.smith@email.com',
+      name: 'John Smith',
+      password: 'password123',
+    };
+
     beforeEach(async () => {
       await userRepository.delete({});
     });
 
-    it('should create user in db and return it in response', async () => {
-      const userInput = {
-        birthDate: '2003-19-01',
-        email: 'joao.bernardino@taqtile.com',
-        name: 'João Bernardino',
-        password: 'senha123',
-      };
+    async function requestUserCreation(input: UserInput) {
+      const mutation = `#graphql
+        mutation CreateUser($data: UserInput) {
+           createUser(data: $data) { 
+            id 
+            name 
+            birthDate 
+            email 
+        }}
+      `;
 
-      const res = await axios.post(serverUrl, {
-        query: 'mutation CreateUser($data: UserInput) { createUser(data: $data) { id name birthDate email }}',
+      return await axios.post(serverUrl, {
+        query: mutation,
         variables: {
-          data: userInput,
+          data: input,
         },
         operationName: 'CreateUser',
       });
+    }
 
-      const responseData = res.data.data.createUser;
+    async function getNumberOfUsersInDB() {
+      return await userRepository.count({});
+    }
+
+    function makeInput(fields?: Partial<UserInput>) {
+      return { ...defaultUserInput, ...fields };
+    }
+
+    it('should create user in db and return it in response', async () => {
+      const userInput = makeInput();
+      const responseData = (await requestUserCreation(userInput)).data.data.createUser;
       const storedUserData = await userRepository.findOne({ where: {} });
 
       expect(responseData).excluding(['id', 'password']).to.deep.equal(userInput);
@@ -50,6 +72,66 @@ describe('Mutation', () => {
 
       expect(+responseData.id).to.equal(storedUserData!.id); // responseData.id is a string
       expect(await compare(userInput.password, storedUserData!.password)).to.be.true;
+    });
+
+    it('should give an error in case of short passwords', async () => {
+      const userInput = makeInput({ password: 'short' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid password',
+        code: 400,
+        details: 'password should have at least 6 characters',
+      });
+      expect(await getNumberOfUsersInDB()).to.equal(0);
+    });
+
+    it('should give an error in case of passwords with no digits', async () => {
+      const userInput = makeInput({ password: 'abcdefghijklmnop' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid password',
+        code: 400,
+        details: 'password should contain a digit',
+      });
+      expect(await getNumberOfUsersInDB()).to.equal(0);
+    });
+
+    it('should give an error in case of passwords with no letters', async () => {
+      const userInput = makeInput({ password: '123456789' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid password',
+        code: 400,
+        details: 'password should contain a letter',
+      });
+      expect(await getNumberOfUsersInDB()).to.equal(0);
+    });
+
+    it('should give an error in case of emails with incorrect formats', async () => {
+      const userInput = makeInput({ email: 'bademail.com' });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid email',
+        code: 400,
+        details: 'email has invalid format',
+      });
+      expect(await getNumberOfUsersInDB()).to.equal(0);
+    });
+
+    it('should give an error in case of duplicated emails', async () => {
+      const existingUser = new User();
+      Object.assign(existingUser, defaultUserInput);
+      userRepository.save(existingUser);
+
+      const userInput = makeInput({ email: existingUser.email });
+      const responseData = (await requestUserCreation(userInput)).data.errors[0];
+
+      expect(responseData).excluding('stacktrace').to.deep.equal({
+        message: 'invalid email',
+        code: 400,
+        details: 'an user with that email already exists',
+      });
+      expect(await getNumberOfUsersInDB()).to.equal(1);
     });
   });
 });
