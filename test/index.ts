@@ -196,8 +196,8 @@ describe('Mutation', () => {
 
       expect(response.errors[0]).excluding('stacktrace').to.deep.equal({
         message: 'Invalid credentials',
-        code: 400,
-        details: 'No user with this email',
+        code: 401,
+        details: 'Wrong email or password',
       });
     });
 
@@ -208,8 +208,8 @@ describe('Mutation', () => {
 
       expect(response.errors[0]).excluding('stacktrace').to.deep.equal({
         message: 'Invalid credentials',
-        code: 400,
-        details: 'Wrong password',
+        code: 401,
+        details: 'Wrong email or password',
       });
     });
   });
