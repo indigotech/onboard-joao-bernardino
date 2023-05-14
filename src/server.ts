@@ -18,9 +18,10 @@ export async function initServer() {
 
   const { url } = await startStandaloneServer(server, { listen: { port: +process.env.PORT! } });
   console.log(`🚀  Server ready at: ${url}`);
+  return server;
 }
 
 export async function run() {
   await initDatabase();
-  await initServer();
+  return await initServer();
 }
