@@ -24,7 +24,7 @@ export async function requestLogin(input: LoginInput, serverUrl: string) {
     }
   `;
 
-  return await axios.post(serverUrl, {
+  return axios.post(serverUrl, {
     query: mutation,
     variables: {
       credentials: input,

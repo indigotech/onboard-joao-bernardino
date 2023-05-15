@@ -13,7 +13,7 @@ export async function requestUserCreation(input: UserInput, serverUrl: string) {
     }}
   `;
 
-  return await axios.post(serverUrl, {
+  return axios.post(serverUrl, {
     query: mutation,
     variables: {
       data: input,
@@ -23,7 +23,7 @@ export async function requestUserCreation(input: UserInput, serverUrl: string) {
 }
 
 export async function getNumberOfUsersInDB() {
-  return await userRepository.count({});
+  return userRepository.count({});
 }
 
 export function makeUserInput(fields?: Partial<UserInput>) {
