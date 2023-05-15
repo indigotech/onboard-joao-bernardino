@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { User } from '../../src/entity/user';
-import { LoginInput, UserInput } from '../../src/inputs';
-import { hashString } from '../../src/hash-string';
-import { defaultUserInput, userRepository } from '../helpers';
+import { User } from 'src/entity/user';
+import { LoginInput, UserInput } from 'src/inputs';
+import { hashString } from 'src/hash-string';
+import { defaultUserInput, userRepository } from 'test/helpers';
 
 export const defaultLoginInput = {
   email: defaultUserInput.email,

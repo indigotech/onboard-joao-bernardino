@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { UserInput } from '../../src/inputs';
-import { defaultUserInput } from '../helpers';
+import { defaultUserInput } from 'test/helpers';
+import { UserInput } from 'src/inputs';
 
 export async function requestUserCreation(input: UserInput, serverUrl: string, token: string) {
   const mutation = `#graphql

@@ -1,5 +1,5 @@
-import { run } from './server';
-import { setupEnv } from './environment';
+import { run } from 'src/server';
+import { setupEnv } from 'src/environment';
 
 setupEnv();
 run();

@@ -1,7 +1,7 @@
-import { User } from './entity/user';
-import { appDataSource } from './data-source';
-import { UserInput } from './inputs';
-import { BaseError } from './base-error';
+import { User } from 'src/entity/user';
+import { appDataSource } from 'src/data-source';
+import { UserInput } from 'src/inputs';
+import { BaseError } from 'src/base-error';
 
 function validatePassword(password: string) {
   const digitRegex = /[0-9]/;

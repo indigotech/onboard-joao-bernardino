@@ -1,5 +1,5 @@
-import { appDataSource } from '../src/data-source';
-import { User } from '../src/entity/user';
+import { appDataSource } from 'src/data-source';
+import { User } from 'src/entity/user';
 
 export const userRepository = appDataSource.getRepository(User);
 
