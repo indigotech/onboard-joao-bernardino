@@ -192,7 +192,6 @@ describe('Mutation', () => {
         email: newUser.email,
         birthDate: newUser.birthDate,
       });
-      expect(loginInfo).to.haveOwnProperty('token');
 
       const jwtPayload = jwt.verify(loginInfo.token, process.env.JWT_PRIVATE_KEY!) as jwt.JwtPayload;
       expect(jwtPayload).keys(['id', 'exp', 'iat']);
@@ -208,7 +207,6 @@ describe('Mutation', () => {
 
       expect(loginInfo.user).excluding(['password', 'id']).to.deep.equal(newUser);
       expect(+loginInfo.user.id).to.deep.equal(newUser.id);
-      expect(loginInfo).to.haveOwnProperty('token');
 
       const jwtPayload = jwt.verify(loginInfo.token, process.env.JWT_PRIVATE_KEY!) as jwt.JwtPayload;
       expect(jwtPayload).keys(['id', 'exp', 'iat']);
