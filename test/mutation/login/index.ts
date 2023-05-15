@@ -2,7 +2,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { expect } from 'chai';
 import * as jwt from 'jsonwebtoken';
 import chaiExclude from 'chai-exclude';
-import { requestLogin, defaultLoginInput, insertUserInDB } from 'test/login-mutation/helpers';
+import { requestLogin, defaultLoginInput, insertUserInDB } from 'test/mutation/login/helpers';
 import { userRepository } from 'test/helpers';
 
 describe('login', () => {

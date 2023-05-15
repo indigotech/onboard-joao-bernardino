@@ -5,7 +5,7 @@ import { Not } from 'typeorm';
 import { User } from 'src/entity/user';
 import { generateToken } from 'src/token';
 import { hashString } from 'src/hash-string';
-import { makeUserInput, requestUserCreation } from 'test/create-user-mutation/helpers';
+import { makeUserInput, requestUserCreation } from 'test/mutation/create-user/helpers';
 import { defaultUserInput, testerUserInput, userRepository } from 'test/helpers';
 
 describe('user input validation', () => {

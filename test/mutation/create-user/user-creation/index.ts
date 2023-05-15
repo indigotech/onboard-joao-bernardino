@@ -7,7 +7,7 @@ import { User } from 'src/entity/user';
 import { generateToken } from 'src/token';
 import { hashString } from 'src/hash-string';
 import { testerUserInput, userRepository } from 'test/helpers';
-import { makeUserInput, requestUserCreation } from 'test/create-user-mutation/helpers';
+import { makeUserInput, requestUserCreation } from 'test/mutation/create-user/helpers';
 
 describe('user creation', () => {
   let serverUrl: string;

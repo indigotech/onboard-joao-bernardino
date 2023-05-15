@@ -7,7 +7,7 @@ import { Not } from 'typeorm';
 import { User } from 'src/entity/user';
 import { hashString } from 'src/hash-string';
 import { defaultUserInput, testerUserInput, userRepository } from 'test/helpers';
-import { requestUserCreation } from 'test/create-user-mutation/helpers';
+import { requestUserCreation } from 'test/mutation/create-user/helpers';
 
 describe('authentication', () => {
   let serverUrl: string;
