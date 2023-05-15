@@ -17,7 +17,10 @@ export const resolvers = {
   Mutation: {
     createUser: async (_: unknown, { data }: { data: UserInput }, contextValue: AppContext) => {
       if (contextValue.token) {
-        authenticate(contextValue.token);
+        const id = authenticate(contextValue.token);
+        if (!(await userRepository.exist({ where: { id } }))) {
+          throw new BaseError('Authentication failed', 401, 'invalid user');
+        }
       } else {
         throw new BaseError('Authentication failed', 401, 'no token provided');
       }
