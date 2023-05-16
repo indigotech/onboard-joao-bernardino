@@ -9,6 +9,3 @@ before(async () => {
   setupEnv();
   await run();
 });
-
-require('./mutation');
-require('./query');
