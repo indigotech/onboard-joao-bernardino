@@ -4,7 +4,6 @@ import { appDataSource } from './data-source';
 import { User } from './entity/user';
 
 export async function authenticate(token: string | undefined) {
-  let id: number;
   let payload: jwt.JwtPayload | string;
   const userRepository = appDataSource.getRepository(User);
 
@@ -22,13 +21,13 @@ export async function authenticate(token: string | undefined) {
     }
   }
 
-  if (!(payload instanceof String)) {
-    id = (payload as jwt.JwtPayload).id;
-    if (!(await userRepository.exist({ where: { id } }))) {
-      throw new BaseError('Authentication failed', 401, 'invalid user');
-    }
-    return id;
-  } else {
+  if (typeof payload === 'string') {
     throw new BaseError('Authentication failed', 401, 'invalid JWT payload');
   }
+
+  const id = (payload as jwt.JwtPayload).id;
+  if (!(await userRepository.exist({ where: { id } }))) {
+    throw new BaseError('Authentication failed', 401, 'invalid user');
+  }
+  return id;
 }
