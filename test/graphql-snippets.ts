@@ -21,3 +21,14 @@ export const loginMutation = `#graphql
     }
   }
 `;
+
+export const userQuery = `#graphql
+  query Query($userId: ID!) {
+    user(id: $userId) {
+      birthDate
+      email
+      id
+      name
+    }
+  }
+`;
