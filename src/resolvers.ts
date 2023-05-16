@@ -14,10 +14,7 @@ export const resolvers = {
   Query: {
     user: async (_: unknown, { id }: { id: number }, contextValue: AppContext) => {
       if (contextValue.token) {
-        const id = authenticate(contextValue.token);
-        if (!(await userRepository.exist({ where: { id } }))) {
-          throw new BaseError('Authentication failed', 401, 'invalid user');
-        }
+        authenticate(contextValue.token);
       } else {
         throw new BaseError('Authentication failed', 401, 'no token provided');
       }
