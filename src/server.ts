@@ -23,5 +23,5 @@ export async function initServer() {
 
 export async function run() {
   await initDatabase();
-  return await initServer();
+  return initServer();
 }
