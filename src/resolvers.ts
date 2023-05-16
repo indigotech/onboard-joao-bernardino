@@ -13,18 +13,16 @@ const userRepository = appDataSource.getRepository(User);
 export const resolvers = {
   Query: {
     user: async (_: unknown, { id }: { id: number }, contextValue: AppContext) => {
-      if (contextValue.token) {
-        authenticate(contextValue.token);
-      } else {
+      if (!contextValue.token) {
         throw new BaseError('Authentication failed', 401, 'no token provided');
       }
+      await authenticate(contextValue.token);
 
       const queriedUser = await userRepository.findOneBy({ id });
-      if (queriedUser) {
-        return queriedUser;
-      } else {
+      if (!queriedUser) {
         throw new BaseError('Not found', 404, 'user does not exist');
       }
+      return queriedUser;
     },
   },
   Mutation: {
