@@ -16,11 +16,7 @@ export const resolvers = {
   },
   Mutation: {
     createUser: async (_: unknown, { data }: { data: UserInput }, contextValue: AppContext) => {
-      if (contextValue.token) {
-        await authenticate(contextValue.token);
-      } else {
-        throw new BaseError('Authentication failed', 401, 'no token provided');
-      }
+      await authenticate(contextValue.token);
 
       const validationResult = await validateUser(data);
       if (!validationResult.validated) {

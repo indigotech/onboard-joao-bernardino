@@ -3,10 +3,14 @@ import { BaseError } from './base-error';
 import { appDataSource } from './data-source';
 import { User } from './entity/user';
 
-export async function authenticate(token: string) {
+export async function authenticate(token: string | undefined) {
   let id: number;
   let payload: jwt.JwtPayload | string;
   const userRepository = appDataSource.getRepository(User);
+
+  if (!token) {
+    throw new BaseError('Authentication failed', 401, 'no token provided');
+  }
 
   try {
     payload = jwt.verify(token, process.env.JWT_PRIVATE_KEY!);
