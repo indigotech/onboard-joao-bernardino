@@ -25,7 +25,7 @@ export const typeDefs = `#graphql
   }
 
   type Query {
-    user(id: ID): User
+    user(id: ID!): User
   }
 
   type Mutation {

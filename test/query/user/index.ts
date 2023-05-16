@@ -14,7 +14,7 @@ describe('user', () => {
   let mockUserId: number;
 
   const query = `#graphql
-    query Query($userId: ID) {
+    query Query($userId: ID!) {
       user(id: $userId) {
         birthDate
         email
