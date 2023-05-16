@@ -1,6 +1,6 @@
 import { User } from './entity/user';
 import { appDataSource } from './data-source';
-import { UserInput } from './schema';
+import { UserInput } from './inputs';
 import { BaseError } from './base-error';
 
 function validatePassword(password: string) {

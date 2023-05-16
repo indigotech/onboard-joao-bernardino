@@ -1,9 +1,9 @@
-import { UserInput } from './schema';
+import { LoginInput, UserInput } from './inputs';
 import { User } from './entity/user';
 import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';
 import { hashString } from './hash-string';
-import { BaseError } from './base-error';
+import { getUserAndToken } from './login';
 
 const userRepository = appDataSource.getRepository(User);
 
@@ -23,6 +23,10 @@ export const resolvers = {
 
       await userRepository.save(newUser);
       return newUser;
+    },
+
+    login: async (_: unknown, { credentials }: { credentials: LoginInput }) => {
+      return await getUserAndToken(credentials);
     },
   },
 };
