@@ -18,7 +18,7 @@ describe('authentication', () => {
 
     await userRepository.delete({});
     const tester = new User();
-    Object.assign(tester, { ...testerUserInput });
+    Object.assign(tester, testerUserInput);
     tester.password = await hashString(tester.password);
     await userRepository.save(tester);
     testerUserId = tester.id;
