@@ -21,9 +21,27 @@ export const resolvers = {
       }
       return queriedUser;
     },
-    users: async (_: unknown, { count = 10 }: { count: number }, contextValue: AppContext) => {
+    users: async (
+      _: unknown,
+      { count = 10, offset = 0 }: { count: number; offset: number },
+      contextValue: AppContext,
+    ) => {
       await authenticate(contextValue.token);
-      return userRepository.find({ order: { name: 'ASC' }, take: count });
+
+      const [totalNumberOfUsers, users] = await Promise.all([
+        userRepository.countBy({}),
+        userRepository.find({ order: { name: 'ASC' }, take: count, skip: offset }),
+      ]);
+
+      const hasNextPage = offset + count < totalNumberOfUsers;
+      const hasPreviousPage = offset > 0;
+
+      return {
+        users,
+        totalNumberOfUsers,
+        hasNextPage,
+        hasPreviousPage,
+      };
     },
   },
   Mutation: {
