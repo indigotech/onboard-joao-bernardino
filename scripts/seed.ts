@@ -27,9 +27,11 @@ async function seed() {
   await appDataSource.setOptions({ url: process.env.DB_URL }).initialize();
   const userRepository = appDataSource.getRepository(User);
 
-  for (let i = 0; i <= 50; i++) {
-    userRepository.save(await makeFakeUser());
+  const promises: Promise<User>[] = [];
+  for (let i = 0; i < 50; i++) {
+    promises.push(userRepository.save(await makeFakeUser()));
   }
+  return Promise.all(promises);
 }
 
 seed();
