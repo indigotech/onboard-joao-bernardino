@@ -33,14 +33,11 @@ export const resolvers = {
         userRepository.find({ order: { name: 'ASC' }, take: count, skip: offset }),
       ]);
 
-      const hasNextPage = offset + count < totalNumberOfUsers;
-      const hasPreviousPage = offset > 0;
-
       return {
         users,
         totalNumberOfUsers,
-        hasNextPage,
-        hasPreviousPage,
+        hasNextPage: offset + count < totalNumberOfUsers,
+        hasPreviousPage: offset > 0,
       };
     },
   },
