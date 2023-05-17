@@ -15,7 +15,7 @@ export const resolvers = {
     user: async (_: unknown, { id }: { id: number }, contextValue: AppContext) => {
       await authenticate(contextValue.token);
 
-      const queriedUser = await userRepository.findOneBy({ id });
+      const queriedUser = await userRepository.findOne({ where: { id }, relations: { addresses: true } });
       if (!queriedUser) {
         throw new BaseError('Not found', 404, 'user does not exist');
       }

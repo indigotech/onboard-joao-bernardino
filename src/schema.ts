@@ -17,6 +17,7 @@ export const typeDefs = `#graphql
     name: String!
     email: String!
     birthDate: String!
+    addresses: [Address!]
   }
 
   type UserPageInfo {
@@ -24,6 +25,17 @@ export const typeDefs = `#graphql
     totalNumberOfUsers: Int!
     hasPreviousPage: Boolean!
     hasNextPage: Boolean!
+  }
+
+  type Address {
+    id: ID!
+    cep: String!
+    street: String!
+    streetNumber: Int!
+    complement: String
+    neighborhood: String!
+    city: String!
+    state: String!
   }
 
   type LoginInfo {
