@@ -22,16 +22,16 @@ async function makeFakeUser() {
   return user;
 }
 
+export async function saveFakeUsers(count = 50) {
+  const users = await Promise.all([...Array(count).keys()].map(() => makeFakeUser()));
+  const userRepository = appDataSource.getRepository(User);
+  return userRepository.save(users);
+}
+
 async function seed() {
   dotenv.config({ path: 'test.env' });
   await appDataSource.setOptions({ url: process.env.DB_URL }).initialize();
-  const userRepository = appDataSource.getRepository(User);
-
-  const promises: Promise<User>[] = [];
-  for (let i = 0; i < 50; i++) {
-    promises.push(userRepository.save(await makeFakeUser()));
-  }
-  return Promise.all(promises);
+  return saveFakeUsers();
 }
 
 seed();
