@@ -1,6 +1,6 @@
 import { unwrapResolverError } from '@apollo/server/errors';
 import { GraphQLFormattedError } from 'graphql';
-import { BaseError } from './base-error';
+import { BaseError } from 'src/base-error';
 
 function wrapError(error: BaseError) {
   return {

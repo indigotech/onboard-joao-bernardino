@@ -1,12 +1,12 @@
-import { LoginInput, UserInput } from './inputs';
-import { User } from './entity/user';
-import { appDataSource } from './data-source';
-import { validateUser } from './user-validation';
-import { hashString } from './hash-string';
-import { getUserAndToken } from './login';
-import { AppContext } from './context';
-import { authenticate } from './authenticate';
-import { BaseError } from './base-error';
+import { LoginInput, UserInput } from 'src/inputs';
+import { User } from 'src/entity/user';
+import { appDataSource } from 'src/data-source';
+import { validateUser } from 'src/user-validation';
+import { hashString } from 'src/hash-string';
+import { getUserAndToken } from 'src/login';
+import { AppContext } from 'src/context';
+import { authenticate } from 'src/authenticate';
+import { BaseError } from 'src/base-error';
 
 const userRepository = appDataSource.getRepository(User);
 

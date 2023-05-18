@@ -2,8 +2,8 @@ import { describe, it, beforeEach } from 'mocha';
 import { expect } from 'chai';
 import * as jwt from 'jsonwebtoken';
 import chaiExclude from 'chai-exclude';
-import { requestLogin, defaultLoginInput, insertUserInDB } from './helpers';
-import { userRepository } from '../helpers';
+import { requestLogin, defaultLoginInput, insertUserInDB } from 'test/login-mutation/helpers';
+import { userRepository } from 'test/helpers';
 
 describe('login', () => {
   let serverUrl: string;

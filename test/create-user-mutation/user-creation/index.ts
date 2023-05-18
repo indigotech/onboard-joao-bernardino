@@ -1,13 +1,13 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { makeUserInput, requestUserCreation } from '../helpers';
-import { User } from '../../../src/entity/user';
-import { testerUserInput, userRepository } from '../../helpers';
-import { generateToken } from '../../../src/token';
-import { hashString } from '../../../src/hash-string';
 import { compare } from 'bcrypt';
 import chaiExclude from 'chai-exclude';
 import { Not } from 'typeorm';
+import { User } from 'src/entity/user';
+import { generateToken } from 'src/token';
+import { hashString } from 'src/hash-string';
+import { testerUserInput, userRepository } from 'test/helpers';
+import { makeUserInput, requestUserCreation } from 'test/create-user-mutation/helpers';
 
 describe('user creation', () => {
   let serverUrl: string;

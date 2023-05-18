@@ -1,9 +1,9 @@
 import { compare } from 'bcrypt';
-import { appDataSource } from './data-source';
-import { User } from './entity/user';
-import { LoginInput } from './inputs';
-import { BaseError } from './base-error';
-import { generateToken } from './token';
+import { appDataSource } from 'src/data-source';
+import { User } from 'src/entity/user';
+import { LoginInput } from 'src/inputs';
+import { BaseError } from 'src/base-error';
+import { generateToken } from 'src/token';
 
 async function getUserFromLoginInput(credentials: LoginInput) {
   const userRepository = appDataSource.getRepository(User);

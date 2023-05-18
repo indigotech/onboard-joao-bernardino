@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-import { BaseError } from './base-error';
-import { appDataSource } from './data-source';
-import { User } from './entity/user';
+import { BaseError } from 'src/base-error';
+import { appDataSource } from 'src/data-source';
+import { User } from 'src/entity/user';
 
 export async function authenticate(token: string | undefined) {
   let payload: jwt.JwtPayload | string;

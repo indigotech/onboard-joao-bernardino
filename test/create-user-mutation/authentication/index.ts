@@ -1,13 +1,13 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { requestUserCreation } from '../helpers';
-import { User } from '../../../src/entity/user';
-import { defaultUserInput, testerUserInput, userRepository } from '../../helpers';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
-import { hashString } from '../../../src/hash-string';
 import chaiExclude from 'chai-exclude';
 import { Not } from 'typeorm';
+import { User } from 'src/entity/user';
+import { hashString } from 'src/hash-string';
+import { defaultUserInput, testerUserInput, userRepository } from 'test/helpers';
+import { requestUserCreation } from 'test/create-user-mutation/helpers';
 
 describe('authentication', () => {
   let serverUrl: string;

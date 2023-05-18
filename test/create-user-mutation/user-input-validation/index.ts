@@ -1,12 +1,12 @@
 import { describe, it, beforeEach } from 'mocha';
 import { expect } from 'chai';
 import chaiExclude from 'chai-exclude';
-import { makeUserInput, requestUserCreation } from '../helpers';
-import { User } from '../../../src/entity/user';
-import { defaultUserInput, testerUserInput, userRepository } from '../../helpers';
-import { generateToken } from '../../../src/token';
-import { hashString } from '../../../src/hash-string';
 import { Not } from 'typeorm';
+import { User } from 'src/entity/user';
+import { generateToken } from 'src/token';
+import { hashString } from 'src/hash-string';
+import { makeUserInput, requestUserCreation } from 'test/create-user-mutation/helpers';
+import { defaultUserInput, testerUserInput, userRepository } from 'test/helpers';
 
 describe('user input validation', () => {
   let serverUrl: string;
