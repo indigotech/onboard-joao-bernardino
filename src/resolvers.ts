@@ -4,6 +4,9 @@ import { appDataSource } from './data-source';
 import { validateUser } from './user-validation';
 import { hashString } from './hash-string';
 import { getUserAndToken } from './login';
+import { AppContext } from './context';
+import { authenticate } from './authenticate';
+import { BaseError } from './base-error';
 
 const userRepository = appDataSource.getRepository(User);
 
@@ -12,7 +15,9 @@ export const resolvers = {
     hello: () => 'wassup?',
   },
   Mutation: {
-    createUser: async (_: unknown, { data }: { data: UserInput }) => {
+    createUser: async (_: unknown, { data }: { data: UserInput }, contextValue: AppContext) => {
+      await authenticate(contextValue.token);
+
       const validationResult = await validateUser(data);
       if (!validationResult.validated) {
         throw validationResult.error;
@@ -26,7 +31,7 @@ export const resolvers = {
     },
 
     login: async (_: unknown, { credentials }: { credentials: LoginInput }) => {
-      return await getUserAndToken(credentials);
+      return getUserAndToken(credentials);
     },
   },
 };

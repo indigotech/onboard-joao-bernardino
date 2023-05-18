@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { UserInput } from '../../src/inputs';
-import { defaultUserInput, userRepository } from '../helpers';
+import { defaultUserInput } from '../helpers';
 
-export async function requestUserCreation(input: UserInput, serverUrl: string) {
+export async function requestUserCreation(input: UserInput, serverUrl: string, token: string) {
   const mutation = `#graphql
     mutation CreateUser($data: UserInput) {
         createUser(data: $data) { 
@@ -13,17 +13,21 @@ export async function requestUserCreation(input: UserInput, serverUrl: string) {
     }}
   `;
 
-  return axios.post(serverUrl, {
-    query: mutation,
-    variables: {
-      data: input,
+  return axios.post(
+    serverUrl,
+    {
+      query: mutation,
+      variables: {
+        data: input,
+      },
+      operationName: 'CreateUser',
     },
-    operationName: 'CreateUser',
-  });
-}
-
-export async function getNumberOfUsersInDB() {
-  return userRepository.count({});
+    {
+      headers: {
+        Authorization: token,
+      },
+    },
+  );
 }
 
 export function makeUserInput(fields?: Partial<UserInput>) {
