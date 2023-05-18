@@ -32,6 +32,7 @@ export const resolvers = {
         order: { name: 'ASC' },
         take: count,
         skip: offset,
+        relations: { addresses: true },
       });
 
       return {
