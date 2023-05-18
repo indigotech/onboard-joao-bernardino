@@ -1,4 +1,4 @@
-import { describe, before } from 'mocha';
+import { before } from 'mocha';
 import { use as chaiUse } from 'chai';
 import chaiExclude from 'chai-exclude';
 import { setupEnv } from 'src/environment';
@@ -8,9 +8,4 @@ before(async () => {
   chaiUse(chaiExclude);
   setupEnv();
   await run();
-});
-
-describe('Mutation', () => {
-  require('./create-user-mutation');
-  require('./login-mutation');
 });

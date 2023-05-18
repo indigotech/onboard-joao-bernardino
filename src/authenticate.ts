@@ -24,10 +24,5 @@ export async function authenticate(token: string | undefined) {
   if (typeof payload === 'string') {
     throw new BaseError('Authentication failed', 401, 'invalid JWT payload');
   }
-
-  const id = (payload as jwt.JwtPayload).id;
-  if (!(await userRepository.exist({ where: { id } }))) {
-    throw new BaseError('Authentication failed', 401, 'invalid user');
-  }
-  return id;
+  return (payload as jwt.JwtPayload).id;
 }
