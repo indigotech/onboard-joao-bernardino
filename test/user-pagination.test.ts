@@ -16,11 +16,13 @@ describe('users query', () => {
 
     const res = (await makeRequest({ query: usersQuery, variables: { count: 15, offset: 0 }, token })).data;
 
-    const storedUsersSimplified = storedUsers.map((u) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, password, ...rest } = u;
-      return { id: id.toString(), ...rest };
-    });
+    const storedUsersSimplified = storedUsers.map((user) => ({
+      id: user.id.toString(),
+      email: user.email,
+      name: user.name,
+      birthDate: user.birthDate,
+    }));
+
     expect(res.data.users.users).to.be.deep.equal(
       storedUsersSimplified.sort((a, b) => (a.name > b.name ? 1 : -1)).slice(0, 15),
     );
