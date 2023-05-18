@@ -29,6 +29,16 @@ export const userQuery = `#graphql
       email
       id
       name
+      addresses {
+        cep
+        city
+        complement
+        id
+        neighborhood
+        state
+        street
+        streetNumber
+      }
     }
   }
 `;
