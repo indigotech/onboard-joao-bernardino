@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import chaiExclude from 'chai-exclude';
-import { getValidToken, insertUserInDB, makeRequest, userRepository } from 'test/helpers';
+import { getValidToken, makeRequest, userRepository } from 'test/helpers';
 import { usersQuery } from 'test/graphql-snippets';
 import { saveFakeUsers } from 'scripts/seed';
 
@@ -10,13 +10,20 @@ describe('users query', () => {
     await userRepository.delete({});
   });
 
-  it('should only send the specified number of users', async () => {
+  it('should return the specified number of users sorted by name', async () => {
     const token = getValidToken();
-    await saveFakeUsers(20);
+    const storedUsers = await saveFakeUsers(20);
 
     const res = (await makeRequest({ query: usersQuery, variables: { count: 15, offset: 0 }, token })).data;
 
-    expect(res.data.users.users.length).to.be.equal(15);
+    const storedUsersSimplified = storedUsers.map((u) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, password, ...rest } = u;
+      return { id: id.toString(), ...rest };
+    });
+    expect(res.data.users.users).to.be.deep.equal(
+      storedUsersSimplified.sort((a, b) => (a.name > b.name ? 1 : -1)).slice(0, 15),
+    );
   });
 
   it('should set hasNextPage and hasPreviousPage correctly when in the last page', async () => {
@@ -48,15 +55,14 @@ describe('users query', () => {
     expect(res.data.users.totalNumberOfUsers).to.be.equal(20);
   });
 
-  it('should return the users sorted by name', async () => {
+  it('should return an empty list if offset >= total number of users', async () => {
     const token = getValidToken();
     await saveFakeUsers(20);
 
-    const res = (await makeRequest({ query: usersQuery, variables: { count: 10, offset: 0 }, token })).data;
+    const res = (await makeRequest({ query: usersQuery, variables: { count: 10, offset: 20 }, token })).data;
 
-    const names = res.data.users.users.map(
-      (u: { id: string; name: string; birthDate: string; email: string }) => u.name,
-    );
-    expect(names).to.be.deep.equal([...names].sort());
+    expect(res.data.users.users).to.be.empty;
+    expect(res.data.users.hasNextPage).to.be.false;
+    expect(res.data.users.hasPreviousPage).to.be.true;
   });
 });

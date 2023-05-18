@@ -28,10 +28,11 @@ export const resolvers = {
     ) => {
       await authenticate(contextValue.token);
 
-      const [totalNumberOfUsers, users] = await Promise.all([
-        userRepository.countBy({}),
-        userRepository.find({ order: { name: 'ASC' }, take: count, skip: offset }),
-      ]);
+      const [users, totalNumberOfUsers] = await userRepository.findAndCount({
+        order: { name: 'ASC' },
+        take: count,
+        skip: offset,
+      });
 
       return {
         users,
