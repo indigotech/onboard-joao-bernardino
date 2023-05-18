@@ -19,6 +19,13 @@ export const typeDefs = `#graphql
     birthDate: String!
   }
 
+  type UserPageInfo {
+    users: [User!]!
+    totalNumberOfUsers: Int!
+    hasPreviousPage: Boolean!
+    hasNextPage: Boolean!
+  }
+
   type LoginInfo {
     user: User!
     token: String!
@@ -26,7 +33,7 @@ export const typeDefs = `#graphql
 
   type Query {
     user(id: ID!): User
-    users(count: Int): [User]
+    users(count: Int, offset: Int): UserPageInfo
   }
 
   type Mutation {
